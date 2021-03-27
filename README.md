@@ -1,4 +1,4 @@
-# DDSS - Deep differential system stability -  Learning advanced mathematical computations from examples
+# Maths from examples -  Learning advanced mathematical computations from examples
 
 This is the source code and data sets relevant to the paper Learning advanced mathematical computations from examples, by Amaury hayat, François Charton and Guillaume Lample, published by ICLR 2021. 
 
@@ -10,7 +10,6 @@ We provide code for
 We also provide
 * 7 datasets
 * 7 pretrained models
-* a Jupyter notebook demonstrating the use
 
 ### Dependencies 
 
@@ -42,49 +41,53 @@ On GPU with limited video memory, you will need to reduce memory usage by adjust
 All paths should be absolute : `--dump_path ./mydump` might not work, `--dump_path c:/Users/me/mydump` should be fine.
 The directories where your datasets, models, and logfiles will be generated are constructed from the parameters --dump_path --exp_name and --exp_id, as {dump_path}/{exp_name}/{exp_id}/, if you do not specify an exp_id, a random unique name will be created for you. If you reuse the same dump_path/exp/name/exp_id, generation or training will resume there (adding new examples, or loading the previous model for training).
 
+All results will be logged in file `train.log`of the experiment path.
+
+All models and datasets can be downloaded from https://dl.fbaipublicfiles.com/MathsFromExamples/. By convention, in all code examples, datasets and models use the path `/checkpoint/fcharton/dumped/`. You will need to adjust this to the correct path on your local machine. 
+
 
 ## Data sets
 
-We provide 7 datasets, all can be found on the FAIR cluster (H2) 
+We provide 7 datasets, all can be found on https://dl.fbaipublicfiles.com/MathsFromExamples/data/ as tar.gz archives.
  
 ### Stability : balanced sample of systems of degree 2 to 5 (50% stable), predicting speed of convergence at 0.01 (largest real part of eigenvalue): 
-in directory  `/checkpoint/fcharton/dumped/ddss_gen_stab_bal/`
+in archive https://dl.fbaipublicfiles.com/MathsFromExamples/data/ddss_stability_balanced.tar.gz
 * ddss_stability_balanced.prefix_counts.train : 25,544,975 systems
 * ddss_stability_balanced.prefix_counts.valid.final : 10,000 systems
 * ddss_stability_balanced.prefix_counts.test.final : 10,000 systems
 
 ### Stability : random sample of systems of degree 2 to 6, predicting speed of convergence at 0.01
-in directory  `/checkpoint/fcharton/dumped/ddss_gen_stab/`
+in archive https://dl.fbaipublicfiles.com/MathsFromExamples/data/ddss_stability.tar.gz
 * ddss_stability.prefix_counts.train : 92,994,423 systems
 * ddss_stability.prefix_counts.valid.final : 10,000 systems
 * ddss_stability.prefix_counts.test.final : 10,000 systems
 
 ### Controllability: balanced sample of systems of degree 3 to 5 (50% stable), predicting controllability (a binary value)
-in directory  `/checkpoint/fcharton/dumped/ddss_gen_ctrl/`
+in archive https://dl.fbaipublicfiles.com/MathsFromExamples/data/ddss_control.tar.gz
 * ddss_control.prefix_counts.train : 26,577,934 systems
 * ddss_control.prefix_counts.valid.final : 10,000 systems
 * ddss_control.prefix_counts.test.final : 10,000 systems
 
 ### Controllability: sample of controllable systems of degree 3 to 6, predicting a control matrix
-in directory `/checkpoint/fcharton/dumped/ddss_gen_gram/`
+in archive https://dl.fbaipublicfiles.com/MathsFromExamples/data/ddss_gram.tar.gz
 * ddss_gram.prefix_counts.train : 53,680,092 systems
 * ddss_gram.prefix_counts.valid.final : 10,000 systems
 * ddss_gram.prefix_counts.test.final : 10,000 systems
 
 ### Non autonomous controllability: random sample (82.4% controllable) of systems of degree 2 and 3, predicting controllability
-in directory  `/checkpoint/fcharton/dumped/ddss_gen_ctrl_t/`
+in archive https://dl.fbaipublicfiles.com/MathsFromExamples/data/ddss_control_t.tar.gz
 * ddss_control_t.prefix_counts.train : 65,754,655 systems
 * ddss_control_t.prefix_counts.valid.final : 10,000 systems
 * ddss_control_t.prefix_counts.test.final : 10,000 systems
 
 ### Non autonomous controllability: balanced sample (50/50) of systems of degree 2 and 3, predicting controllability
-in directory  `/checkpoint/fcharton/dumped/ddss_gen_ctrl_t/`
+in archive https://dl.fbaipublicfiles.com/MathsFromExamples/data/ddss_control_t_bal.tar.gz
 * ddss_control_t_bal.prefix_counts.train : 23,125,016 systems
 * ddss_control_t_bal.prefix_counts.valid.final : 10,000 systems
 * ddss_control_t_bal.prefix_counts.test.final : 10,000 systems
 
 ### Partial differential equations with initial conditions, predicting existence of a solution and behavior at infinity
-in directory `/checkpoint/fcharton/dumped/ddss_gen_fourier/`
+in archive https://dl.fbaipublicfiles.com/MathsFromExamples/data/ddss_fourier.tar.gz
 * ddss_fourier.prefix_counts.train : 52,285,760 systems
 * ddss_fourier.prefix_counts.valid.final : 10,000 systems
 * ddss_fourier.prefix_counts.test.final : 10,000 systems
@@ -160,7 +163,7 @@ cat */data.prefix \
 > ddss_stability_balanced.prefix_counts
 
 # create train, valid and test samples
-python ~/DDSS/split_data.py ddss_stability_balanced.prefix_counts 10000
+python ~/MathsFromExamples/split_data.py ddss_stability_balanced.prefix_counts 10000
 
 # check valid and test for duplicates and remove them
 awk -F"[|\t]" 'NR==FNR { lines[$2]=1; next } !($2 in lines)' ddss_stability_balanced.prefix_counts.train ddss_stability_balanced.prefix_counts.valid > ddss_stability_balanced.prefix_counts.valid.final
@@ -179,7 +182,7 @@ cat */data.prefix \
 > ddss_stability.prefix_counts
  
 # create train, valid and test samples 
-python ~/DDSS/split_data.py ddss_stability.prefix_counts 10000
+python ~/MathsFromExamples/split_data.py ddss_stability.prefix_counts 10000
 
 # check valid and test for duplicates and remove them
 awk -F"[|\t]" 'NR==FNR { lines[$2]=1; next } !($2 in lines)' ddss_stability.prefix_counts.train ddss_stability.prefix_counts.valid > ddss_stability.prefix_counts.valid.final
@@ -211,7 +214,7 @@ cat */data.prefix \
 cat ddss_control.prefix_counts.0 ddss_control.prefix_counts.1 | shuf > ddss_control.prefix_counts
 
 # create train, valid and test samples
-python ~/DDSS/split_data.py ddss_control.prefix_counts 10000
+python ~/MathsFromExamples/split_data.py ddss_control.prefix_counts 10000
 
 # check valid and test for duplicates and remove them
 awk -F"[|\t]" 'NR==FNR { lines[$2]=1; next } !($2 in lines)' ddss_control.prefix_counts.train ddss_control.prefix_counts.valid > ddss_control.prefix_counts.valid.final
@@ -230,7 +233,7 @@ cat */data.prefix \
 > ddss_control_t.prefix_counts
 
 # create train, valid and test samples
-python ~/DDSS/split_data.py ddss_control_t.prefix_counts 10000
+python ~/MathsFromExamples/split_data.py ddss_control_t.prefix_counts 10000
 
 # check valid and test for duplicates and remove them
 awk -F"[|\t]" 'NR==FNR { lines[$2]=1; next } !($2 in lines)' ddss_control_t.prefix_counts.train ddss_control_t.prefix_counts.valid > ddss_control_t.prefix_counts.valid.final
@@ -262,7 +265,7 @@ cat */data.prefix \
 cat ddss_control_t.prefix_counts.0 ddss_control_t.prefix_counts.1 | shuf > ddss_control_t_bal.prefix_counts
 
 # create train, valid and test samples
-python ~/DDSS/split_data.py ddss_control_t_bal.prefix_counts 10000
+python ~/MathsFromExamples/split_data.py ddss_control_t_bal.prefix_counts 10000
 
 # check valid and test for duplicates and remove them
 awk -F"[|\t]" 'NR==FNR { lines[$2]=1; next } !($2 in lines)' ddss_control_t_bal.prefix_counts.train ddss_control_t_bal.prefix_counts.valid > ddss_control_t_bal.prefix_counts.valid.final
@@ -281,7 +284,7 @@ cat */data.prefix \
 > ddss_gram.prefix_counts
  
 # create train, valid and test samples 
-python ~/DDSS/split_data.py ddss_gram.prefix_counts 10000
+python ~/MathsFromExamples/split_data.py ddss_gram.prefix_counts 10000
 
 # check valid and test for duplicates and remove them
 awk -F"[|\t]" 'NR==FNR { lines[$2]=1; next } !($2 in lines)' ddss_gram.prefix_counts.train ddss_gram.prefix_counts.valid > ddss_gram.prefix_counts.valid.final
@@ -300,7 +303,7 @@ cat */data.prefix \
 > ddss_fourier.prefix_counts
  
 # create train, valid and test samples 
-python ~/DDSS/split_data.py ddss_fourier.prefix_counts 10000
+python ~/MathsFromExamples/split_data.py ddss_fourier.prefix_counts 10000
 
 # check valid and test for duplicates and remove them
 awk -F"[|\t]" 'NR==FNR { lines[$2]=1; next } !($2 in lines)' ddss_fourier.prefix_counts.train ddss_fourier.prefix_counts.valid > ddss_fourier.prefix_counts.valid.final
@@ -311,8 +314,8 @@ awk -F"[|\t]" 'NR==FNR { lines[$2]=1; next } !($2 in lines)' ddss_fourier.prefix
 We provide 7 pretrained models for the various problems. Below are the links, the dataset they were trained on, and the parameters used, and the performance on the validation set (valid.final in the same directory, 10 000 held-out examples).
 
 ### Predicting stability (qualitative)
-* Model: `/checkpoint/fcharton/dumped/ddss_stab_quali/37185697/best-valid_ode_control.pth`
-* Training set: `/checkpoint/fcharton/dumped/ddss_gen_stab_bal/ddss_stability_balanced.prefix_counts.train`
+* Model: https://dl.fbaipublicfiles.com/MathsFromExamples/models/ddss_stab_quali.pth
+* Training set: `ddss_stability_balanced.prefix_counts.train`
 * Accuracy over validation set: 97.1%
 * Training parameters (command line)
 ```bash
@@ -320,10 +323,17 @@ python train.py --dump_path '/checkpoint/fcharton/dumped' --save_periodic 0 --fp
 ```
 
 ### Stability:  computing convergence speed
+* Model: https://dl.fbaipublicfiles.com/MathsFromExamples/models/ddss_stab_quanti.pth
+* Training set:`ddss_stability.prefix_counts.train`
+* Accuracy over validation set: 87.4%
+* Training parameters (command line)
+```bash
+python train.py --dump_path '/checkpoint/fcharton/dumped' --save_periodic 0 --fp16 true --amp 2 --accumulate_gradients 1 --emb_dim 1024 --batch_size 128 --batch_size_eval 256 --n_enc_layers 8 --n_dec_layers 8 --n_heads 8 --dropout 0 --attention_dropout 0 --share_inout_emb true --sinusoidal_embeddings false --max_len 512 --optimizer 'adam_inverse_sqrt,warmup_updates=10000,lr=0.0001,weight_decay=0.01' --clip_grad_norm 5 --epoch_size 300000 --max_epoch 100000 --num_workers 1 --export_data false --env_name ode --max_int 10 --positive false --nonnull true --skip_zero_gradient true --prob_int 0.3 --max_degree 6 --min_degree 2 --eval_verbose 0 --beam_eval 1 --eval_size 10000 --tasks ode_convergence_speed --reload_data 'ode_convergence_speed,/checkpoint/fcharton/dumped/ddss_gen_stab/ddss_stability.prefix_counts.train,/checkpoint/fcharton/dumped/ddss_gen_stab/ddss_stability.prefix_counts.valid.final,/checkpoint/fcharton/dumped/ddss_gen_stab/ddss_stability.prefix_counts.test.final' --reload_size 40000000 --stopping_criterion 'valid_ode_convergence_speed_beam_acc,40' --validation_metrics valid_ode_convergence_speed_beam_acc --env_base_seed -1 --exp_name ddss_stab_quanti
+```
 
 ### Predicting autonomous controllability
-* Model: `/checkpoint/fcharton/dumped/ddss_ctrl/37056800/best-valid_ode_control.pth`
-* Training set: `/checkpoint/fcharton/dumped/ddss_gen_ctrl/ddss_control.prefix_counts.train`
+* Model: https://dl.fbaipublicfiles.com/MathsFromExamples/models/ddss_ctrl.pth
+* Training set: `ddss_control.prefix_counts.train`
 * Accuracy over validation set: 97.4%
 * Training parameters (command line)
 ```bash
@@ -331,8 +341,8 @@ python train.py --dump_path '/checkpoint/fcharton/dumped' --save_periodic 0 --fp
  ```
 
 ### Predicting non-autonomous controllability
-* Model: `/checkpoint/fcharton/dumped/ddss_ctrl_t/37185745/best-valid_ode_control.pth`
-* Training set: `/checkpoint/fcharton/dumped/ddss_gen_ctrl_t/ddss_control_t.prefix_counts.train`
+* Model: https://dl.fbaipublicfiles.com/MathsFromExamples/models/ddss_ctrl_t.pth
+* Training set: `ddss_control_t.prefix_counts.train`
 * Accuracy over validation set: 99.6%
 * Training parameters (command line)
 ```bash
@@ -340,12 +350,26 @@ python train.py --dump_path '/checkpoint/fcharton/dumped' --save_periodic 0 --fp
 ```
 
 ### Computing control matrices: predicting solution up to 10% 
+* Model: https://dl.fbaipublicfiles.com/MathsFromExamples/models/ddss_gram_approx.pth
+* Training set: `ddss_gram.prefix_counts.train`
+* Accuracy over validation set: 24.5%
+* Training parameters (command line)
+```bash
+python /private/home/fcharton/workdir/ddss_gram/2021_03_18_12_05_11/train.py --dump_path '/checkpoint/fcharton/dumped' --save_periodic 0 --fp16 true --amp 2 --accumulate_gradients 1 --emb_dim 512 --batch_size 128 --batch_size_eval 128 --n_enc_layers 6 --n_dec_layers 6 --n_heads 8 --dropout 0 --attention_dropout 0 --share_inout_emb true --sinusoidal_embeddings false --max_len 512 --optimizer 'adam,lr=0.0001' --clip_grad_norm 5 --epoch_size 300000 --max_epoch 100000 --num_workers 1 --export_data false --env_name ode --max_int 10 --positive false --nonnull true --skip_zero_gradient true --prob_int 0.3 --max_degree 6 --min_degree 3 --eval_value 0.5 --predict_gramian true --euclidian_metric true --auxiliary_task false --eval_verbose 0 --beam_eval 1 --eval_size 10000 --tasks ode_control --reload_data 'ode_control,/checkpoint/fcharton/dumped/ddss_gen_gram/ddss_gram.prefix_counts.train,/checkpoint/fcharton/dumped/ddss_gen_gram/ddss_gram.prefix_counts.valid.final,/checkpoint/fcharton/dumped/ddss_gen_gram/ddss_gram.prefix_counts.test.final' --reload_size 50000000 --stopping_criterion 'valid_ode_control_beam_acc,40' --validation_metrics valid_ode_control_beam_acc --env_base_seed -1 --exp_name ddss_gram
+```
 
 ### Computing control matrices: predicting a correct mathematical solution
+* Model: https://dl.fbaipublicfiles.com/MathsFromExamples/models/ddss_gram_math.pth
+* Training set: `ddss_gram.prefix_counts.train`
+* Accuracy over validation set: 63.5%
+* Training parameters (command line)
+```bash
+python /private/home/fcharton/workdir/ddss_gram/2021_03_09_12_09_38/train.py --dump_path '/checkpoint/fcharton/dumped' --save_periodic 0 --fp16 true --amp 2 --accumulate_gradients 1 --emb_dim 512 --batch_size 128 --batch_size_eval 128 --n_enc_layers 6 --n_dec_layers 6 --n_heads 8 --dropout 0 --attention_dropout 0 --share_inout_emb true --sinusoidal_embeddings false --max_len 512 --optimizer 'adam,lr=0.0001' --clip_grad_norm 5 --epoch_size 300000 --max_epoch 100000 --num_workers 1 --export_data false --env_name ode --max_int 10 --positive false --nonnull true --skip_zero_gradient true --prob_int 0.3 --max_degree 6 --min_degree 3 --eval_value 0.5 --predict_gramian true --euclidian_metric false --auxiliary_task false --eval_verbose 0 --beam_eval 1 --eval_size 10000 --tasks ode_control --reload_data 'ode_control,/checkpoint/fcharton/dumped/ddss_gen_gram/ddss_gram.prefix_counts.train,/checkpoint/fcharton/dumped/ddss_gen_gram/ddss_gram.prefix_counts.valid.final,/checkpoint/fcharton/dumped/ddss_gen_gram/ddss_gram.prefix_counts.test.final' --reload_size 40000000 --stopping_criterion 'valid_ode_control_beam_acc,20' --validation_metrics valid_ode_control_beam_acc --env_base_seed -1 --exp_name ddss_gram
+```
 
 ### Predicting the existence of solutions of partial differential equations
-* Model: `/checkpoint/fcharton/dumped/ddss_fourier/37062096/best-valid_fourier_cond_init_acc.pth`
-* Training set: `/checkpoint/fcharton/dumped/ddss_gen_fourier/ddss_fourier.prefix_counts.train`
+* Model: https://dl.fbaipublicfiles.com/MathsFromExamples/models/ddss_fourier.pth
+* Training set: `ddss_fourier.prefix_counts.train`
 * Accuracy over validation set: 98.6%
 * Training parameters (command line) 
 ```bash
@@ -353,9 +377,20 @@ python train.py --dump_path '/checkpoint/fcharton/dumped' --save_periodic 0 --fp
 ```
 
 ## Evaluating trained models
+To evaluate over a trained model `model.pth` on a specific test set `test.data`, run the model with the same parameters as training, setting `--eval_only true`and `--reload_model` to the path to your model (e.g. `--reload_model /model_path/model.pth`), and setting the second file `--reload_data`to your test data (e.g. ` --reload_data 'ode_control,/checkpoint/fcharton/dumped/ddss_gen_gram/ddss_gram.prefix_counts.train,/MYPATH/test.data,/checkpoint/fcharton/dumped/ddss_gen_gram/ddss_gram.prefix_counts.test.final'`). Set `--eval_size`to the size of your dataset. At present, only the validation dataset is used for evaluation, but you can change this by toggling comments on lines 367 and 368 of file `evaluator.py`.
 
 
 ## Citation
-This code is released under a ... License. Please cite the following paper in research using the source code, datasets or models.
+This code is released under a Creative Commons License, see LICENCE file for more details. 
+If you use this code, consider citing
+
+@misc{charton2021learning,
+      title={Learning advanced mathematical computations from examples}, 
+      author={François Charton and Amaury Hayat and Guillaume Lample},
+      year={2021},
+      eprint={2006.06462},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
 
 
