@@ -1,6 +1,6 @@
 # Maths from examples -  Learning advanced mathematical computations from examples
 
-This is the source code and data sets relevant to the paper Learning advanced mathematical computations from examples, by Amaury hayat, François Charton and Guillaume Lample, published by ICLR 2021. 
+This is the source code and data sets relevant to the paper Learning advanced mathematical computations from examples, by Amaury hayat, François Charton and Guillaume Lample, published by ICLR 2021. https://arxiv.org/abs/2006.06462
 
 We provide code for 
 * data generation
